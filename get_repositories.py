@@ -12,4 +12,4 @@ for repo in my_repos:
     contributors = repo.get_contributors()
     print("\t" + str(contributors.totalCount) + " total contributors:")
     for contributor in contributors:
-        print("\t" + contributor.name)
+        print("\t" + contributor.login)
