@@ -1,0 +1,7 @@
+# Template file for config.yml to hold secrets (DO NOT COMMIT SECRETS TO REPO!)
+github:
+  token: GITHUB_PAT_HERE
+neo4j:
+  uri: NEO4J_URI
+  username: NEO4J_USERNAME
+  password: NEO4J_PASSWORD

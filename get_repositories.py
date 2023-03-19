@@ -1,7 +1,9 @@
 from github import Github
-import os
+import yaml
 
-token = os.getenv('github_token')
+config = yaml.safe_load(open("config.yml"))
+
+token = config["github"]["token"]
 
 g = Github(token)
 
