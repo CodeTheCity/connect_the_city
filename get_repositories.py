@@ -39,8 +39,8 @@ for repo in my_repos:
         print("\t\t" + contributor.login)
         contributor_list.append(contributor.login)
         #neo4j_database.create_contributor_node(contributor.login, repo.name)
-        neo4j_database.create_relation(contributor.login, repo.name)
-    
+        neo4j_database.create_relation(contributor.login, repo.name, contributor.contributions, repo.html_url, contributor.html_url)
+        
 
 # Get a list of unique contributors
 distinct_list = set(contributor_list)

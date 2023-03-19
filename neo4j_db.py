@@ -33,14 +33,14 @@ class neo4j_db:
             MERGE (n:Contributor {name: $name})
         """, name=name)
 
-    def create_relation(self, name, repo):
+    def create_relation(self, name, repo, contributions, repo_url, contributor_url):
             with self.driver.session() as session:
-                session.execute_write(self._write_relation, name, repo)
+                session.execute_write(self._write_relation, name, repo, contributions, repo_url, contributor_url)
 
     @staticmethod
-    def _write_relation(tx, name, repo):
+    def _write_relation(tx, name, repo, contributions, repo_url, contributor_url):
         tran = tx.run("""
-            MERGE (n:Project {name: $repo})
-            MERGE (m:Contributor {name: $name})
-            MERGE (m)-[:worked_on]->(n);
-        """, name=name, repo=repo)
+            MERGE (p:Project {name: $repo, url: $repo_url})
+            MERGE (c:Contributor {name: $name, url: $contributor_url})
+            MERGE (c)-[:worked_on{rel_name: c.name + '<->' + p.name, contributions: $contributions}]->(p);
+        """, name=name, repo=repo, contributions=contributions, repo_url=repo_url, contributor_url=contributor_url)
