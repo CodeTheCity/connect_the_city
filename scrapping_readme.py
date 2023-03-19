@@ -1,15 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# ##### GET TAGS OF UP TO TEN
-# 
-# * note because stopword removal is not enough to filter out important potential tag
-#     * I create a list with common words used across CTC readme text (typically aiming to remove top 15 commonly used words
-#     * re-run ctc github repos scrapping
-#     * fetch top 10 possible tags  where available
-# * note added a manual filter list were I could add words the script will filter away from final result
-# * final result is a dictionary of reponame key and tags list as values
-
 # In[ ]:
 
 
@@ -122,8 +113,8 @@ def process_words_ctc(data: str):
 # In[ ]:
 
 
-# rep TAG
-# output repo.name: tag
+# OUTPUT REPONAME: TAG PAIRS
+
 manual_filter = ['codethecity','ncodethecity','div', 'class', 'col','npercentage', 'mailto']
 
 token = os.getenv('github_token')
