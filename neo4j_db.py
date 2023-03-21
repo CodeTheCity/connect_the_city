@@ -33,14 +33,16 @@ class neo4j_db:
             MERGE (n:Contributor {name: $name})
         """, name=name)
 
-    def create_relation(self, name, repo, contributions, repo_url, contributor_url):
+    def create_relation(self, name, repo, contributions, repo_url, contributor_url, event_name):
             with self.driver.session() as session:
-                session.execute_write(self._write_relation, name, repo, contributions, repo_url, contributor_url)
+                session.execute_write(self._write_relation, name, repo, contributions, repo_url, contributor_url, event_name)
 
     @staticmethod
-    def _write_relation(tx, name, repo, contributions, repo_url, contributor_url):
+    def _write_relation(tx, name, repo, contributions, repo_url, contributor_url, event_name):
         tran = tx.run("""
             MERGE (p:Project {name: $repo, url: $repo_url})
             MERGE (c:Contributor {name: $name, url: $contributor_url})
-            MERGE (c)-[:worked_on{rel_name: c.name + '<->' + p.name, contributions: $contributions}]->(p);
-        """, name=name, repo=repo, contributions=contributions, repo_url=repo_url, contributor_url=contributor_url)
+            MERGE (e:Event {name: $event_name })
+            MERGE (c)-[:worked_on{rel_name: c.name + '<->' + p.name, contributions: $contributions}]->(p)
+            MERGE (p)-[:is_part_of{rel_name: p.name + '<->' + e.name}]->(e);
+        """, name=name, repo=repo, contributions=contributions, repo_url=repo_url, contributor_url=contributor_url, event_name=event_name)

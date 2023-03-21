@@ -2,6 +2,12 @@ from github import Github
 import yaml
 from neo4j_db import neo4j_db
 
+def index_containing_substring(the_list, substring):
+    for i, s in enumerate(the_list):
+        if substring in s:
+              return i
+    return -1
+
 # Set up config
 print("======================")
 print("Setting up config from config.yml...")
@@ -35,11 +41,20 @@ for repo in my_repos:
     #neo4j_database.create_repo_node(repo.name)
     contributors = repo.get_contributors()
     print("\t" + str(contributors.totalCount) + " total contributors:")
+
+    contains_exclude = index_containing_substring(repo.topics,"graph-exclude")
+    if contains_exclude != -1:
+        print(repo.name + " is excluded")
+        continue;
+
+    event_name_index = index_containing_substring(repo.topics,"ctc")
+    event_name = "Unknown event" if event_name_index == -1 else repo.topics[event_name_index]
+
     for contributor in contributors:
         print("\t\t" + contributor.login)
         contributor_list.append(contributor.login)
         #neo4j_database.create_contributor_node(contributor.login, repo.name)
-        neo4j_database.create_relation(contributor.login, repo.name, contributor.contributions, repo.html_url, contributor.html_url)
+        neo4j_database.create_relation(contributor.login, repo.name, contributor.contributions, repo.html_url, contributor.html_url, event_name)
         
 
 # Get a list of unique contributors
